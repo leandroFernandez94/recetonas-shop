@@ -14,3 +14,8 @@ a {
 * {
   box-sizing: border-box;
 }
+
+.app-container {
+  width: 100%;
+  padding: 0 30px;
+}
