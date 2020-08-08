@@ -1,126 +1,35 @@
 import { Fragment } from "react";
-
-const precios = {
-  budines: [
-    {
-      name: "vainilla",
-      price: 305,
-      specialPrice: 275,
-    },
-    {
-      name: "limón",
-      price: 290,
-      specialPrice: 330,
-    },
-    {
-      name: "chocolate",
-      price: 365,
-      specialPrice: 330,
-    },
-  ],
-  galletitas: [
-    {
-      name: "vainilla",
-      price: 305,
-      specialPrice: 275,
-      quantity: "100g",
-    },
-    {
-      name: "limón",
-      price: 290,
-      specialPrice: 330,
-      quantity: "100g",
-    },
-    {
-      name: "chocolate",
-      price: 365,
-      specialPrice: 330,
-      quantity: "200g",
-    },
-  ],
-  pepas: [
-    {
-      name: "de chocolate",
-      quantity: "8u",
-      price: 285,
-      specialPrice: 255,
-    },
-    {
-      name: "de frutilla",
-      quantity: "8u",
-      price: 340,
-      specialPrice: 305,
-    },
-  ],
-  trufas: [
-    {
-      name: "manichoc",
-      price: 235,
-      specialPrice: 210,
-      quantity: "120g",
-    },
-    {
-      name: "frutilla",
-      price: 160,
-      specialPrice: 140,
-      quantity: "120g",
-    },
-  ],
-  muffin: [
-    {
-      name: "chocolate",
-      quantity: "6u",
-      price: 260,
-      specialPrice: 235,
-    },
-    {
-      name: "frutilla",
-      quantity: "6u",
-      price: 280,
-      specialPrice: 250,
-    },
-  ],
-  alfajores: [
-    {
-      name: "chocolate con mousse de chocolate",
-      quantity: "6u",
-      price: 370,
-      specialPrice: 335,
-    },
-  ],
-  pan: [
-    {
-      name: "pan de queso",
-      quantity: "300g",
-      price: 390,
-      specialPrice: 350,
-    },
-  ],
-  postres: [
-    {
-      name: "tiramisú",
-      quantity: "300g",
-      price: 270,
-      specialPrice: 240,
-    },
-  ],
-};
+import useSWR from "swr";
 
 function getName(name, quantity) {
   return quantity ? `${name} (${quantity})` : name;
 }
 
+const fetcher = (url) => fetch(url).then((res) => res.json());
+
 export default function Precios() {
+  const result = useSWR("/api/precios", fetcher);
+  const { data, error } = result;
+
+  if (error) {
+    return "error";
+  }
+  if (!data) {
+    return "loading";
+  }
+
+  const { precios } = data;
+
   return (
     <div className="precios-container">
-      {Object.keys(precios).map((section) => (
-        <Fragment>
+      {Object.keys(precios || []).map((section) => (
+        <Fragment key={section}>
           <h3 className="section-name">{section}</h3>
           <table className="section-table">
             <tbody>
               {precios[section].map(
                 ({ name, quantity, price, specialPrice }) => (
-                  <tr className="table-row">
+                  <tr className="table-row" key={name}>
                     <td>{getName(name, quantity)}</td>
                     <td>{price}</td>
                     <td>{specialPrice}</td>
