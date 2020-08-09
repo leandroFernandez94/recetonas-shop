@@ -1,3 +1,6 @@
+import dbConnect from "../../utils/dbConnect";
+import Price from '../../models/Price'
+
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 const precios = {
   budines: [
@@ -104,7 +107,9 @@ const precios = {
     },
   ],
 };
-export default (req, res) => {
-  res.statusCode = 200;
-  res.json({ precios });
+export default async (req, res) => {
+  await dbConnect()
+
+  const prices = await Price.find({})
+  res.json({ prices });
 };

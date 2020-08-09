@@ -2,7 +2,8 @@ import Link from "next/link";
 import SectionCards from "../components/SectionCards";
 
 const sections = [
-  { name: "Precios", link: "/precios" },
+  { name: "Precios", link: "/prices" },
+  { name: "Agregar Precio", link: "/add-price" },
   { name: "Recetas", link: "/recetas" },
   { name: "Pedidos", link: "/pedidos" },
 ];
@@ -12,7 +13,7 @@ export default function Home() {
     <main>
       <SectionCards elements={sections}>
         {({ name, link }) => (
-          <Link href={link}>
+          <Link href={link} key={name}>
             <a role="button" className="card-button">
               <span>{name}</span>
             </a>

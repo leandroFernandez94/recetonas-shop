@@ -1,15 +1,29 @@
-import { Fragment } from "react";
+import { Fragment, useEffect, useState } from "react";
 import useSWR from "swr";
 
 function getName(name, quantity) {
   return quantity ? `${name} (${quantity})` : name;
 }
 
-const fetcher = (url) => fetch(url).then((res) => res.json());
+function orderBySection(acum, {section,...others}) {
+  if(!acum[section]) {
+    acum[section] = [others]
+  } else acum[section].push(others)
+
+  return acum
+}
 
 export default function Precios() {
-  const result = useSWR("/api/precios", fetcher);
-  const { data, error } = result;
+  const [pricesBySection, setPricesBySection] = useState(null)
+  const {data, error} = useSWR("/api/get-prices");
+
+  useEffect(() => {
+    console.log(data)
+    if(!data || !data.prices) return
+    const bySection = data.prices.reduce(orderBySection, {})
+    setPricesBySection(bySection)
+  }, [data])
+
 
   if (error) {
     return "error";
@@ -18,16 +32,16 @@ export default function Precios() {
     return "loading";
   }
 
-  const { precios } = data;
+  if(!pricesBySection) return null
 
   return (
     <div className="precios-container">
-      {Object.keys(precios || []).map((section) => (
+      {Object.keys(pricesBySection || []).map((section) => (
         <Fragment key={section}>
           <h3 className="section-name">{section}</h3>
           <table className="section-table">
             <tbody>
-              {precios[section].map(
+              {pricesBySection[section].map(
                 ({ name, quantity, price, specialPrice }) => (
                   <tr className="table-row" key={name}>
                     <td>{getName(name, quantity)}</td>
