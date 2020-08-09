@@ -1,5 +1,6 @@
 import Link from "next/link";
 import SectionCards from "../components/SectionCards";
+import PostDefaultPricesButton from "../components/PostDefaultPricesButton";
 
 const sections = [
   { name: "Precios", link: "/prices" },
@@ -20,6 +21,7 @@ export default function Home() {
           </Link>
         )}
       </SectionCards>
+      <PostDefaultPricesButton/>
       <style jsx>
         {`
           .card-button {

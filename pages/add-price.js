@@ -1,6 +1,5 @@
 import { useRef } from "react"
-
-const contentType = 'application/json'
+import { makePutRequest } from "../utils/fetch"
 
 export default function addPrice() {
 
@@ -13,7 +12,7 @@ export default function addPrice() {
   function getValues() {
     return {
       section: section.current.value,
-      name: section.current.value,
+      name: name.current.value,
       price: price.current.value,
       specialPrice: specialPrice.current.value,
       quantity: quantity.current.value
@@ -24,37 +23,30 @@ export default function addPrice() {
     e.preventDefault()
     const values = getValues()
 
-    const res = await fetch('/api/post-price', {
-      method: 'PUT',
-      headers: {
-        Accept: contentType,
-        'Content-Type': contentType,
-      },
-      body: JSON.stringify(values),
-    })
+    makePutRequest('/api/post-price', values)
   }
 
   return (
     <form onSubmit={submitForm}>
       <div>
         <label>section: </label>
-        <input required ref={section} defaultValue="galletitas"></input> 
+        <input required ref={section}></input> 
       </div>
       <div>
         <label>Nombre: </label>
-        <input required ref={name} defaultValue="las mejores cookies"></input> 
+        <input required ref={name}></input> 
       </div>
       <div>
         <label>Precio: </label>
-        <input required ref={price} defaultValue="400"></input> 
+        <input required ref={price}></input> 
       </div>
       <div>
         <label>Precio especial: </label>
-        <input ref={specialPrice} defaultValue="300"></input> 
+        <input ref={specialPrice}></input> 
       </div>
       <div>
         <label>Cantidad: </label>
-        <input ref={quantity} defaultValue="8u"></input> 
+        <input ref={quantity}></input> 
       </div>
       <button type="submit">Crear</button>
     </form>
